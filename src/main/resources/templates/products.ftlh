@@ -8,11 +8,17 @@
 <body>
 <h1 style ="text-align:center">BUYOPT</h1>
 <a>все товары :</a>
+<form action="/" method="get">
+    Поиск по названию объявления: <input type="text" name="title"><br>
+    <input type="submit" value="Поиск"/>
+</form>
 <#list products as product>
 <div>
     <p><b>${product.title}</b><b>${product.price} .руб </b> | <a href = "/product/${product.id}">Подробнее...</a></p>
 
 </div>
+<#else>
+    <h3>товаров нет</h3>
 </#list>
 <hr>
 <h3>Создать новый товар</h3>

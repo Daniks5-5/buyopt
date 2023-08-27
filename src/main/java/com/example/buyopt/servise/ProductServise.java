@@ -1,40 +1,38 @@
 package com.example.buyopt.servise;
 
+import com.example.buyopt.repositories.ProductRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import models.Products;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class ProductServise {
-    private List<Products> products = new ArrayList<>();
-    private long ID = 0;
+    private final ProductRepository productRepository;
 
-    {
-        products.add(new Products(++ID, "Toyota Estima 2 - ", "Simple description", 1500000, "Lipetsk", "diller"));
-        products.add(new Products(++ID, "Toyota Estima 3 - ", "Simple description", 2000000, "Lipetsk", "diller"));
-    }
+    public List<Products> listProduct(String title) {
+        List<Products> products = productRepository.findAll();
+        if(title != null) return productRepository.findByTitle(title);//если есть title, то мы его возращаем
+        return productRepository.findAll();//если нет, то возращаем всё что есть
 
-    public List<Products> listProduct() {
-        return products;
     }
 
     public void saveProducts(Products product) {
-        product.setId(++ID);
-        products.add(product);
+        log.info("Saving new {} ", product);
+        productRepository.save(product);
     }
 
     public void deleteProduct(Long id) {
-        products.removeIf(product -> product.getId().equals(id));
+        productRepository.deleteById(id); // удаление товара
     }
 
     public Products getProductById(Long id) {
-        for (Products product : products) {
-            if (product.getId().equals(id)) return product;
-        }
-            return null;
-
-
-
+        return productRepository.findById(id).orElse(null);// елси товар не найден то возращаем null (проверка на наличе товара)
     }
 }
+
+
